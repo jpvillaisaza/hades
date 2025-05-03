@@ -20,6 +20,10 @@ library
     Hades
     Hades.Hangman
     Hades.Main
+  build-depends:
+    , optparse-applicative >= 0.18.1 && < 0.19
+  default-extensions:
+    TupleSections
 
 executable hades
   import:
