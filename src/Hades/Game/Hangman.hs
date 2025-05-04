@@ -4,15 +4,17 @@ module Hades.Game.Hangman (hangman) where
 import Control.Monad (unless)
 
 -- hades
+import Hades.Game (Game (..))
 import Hades.Lib.Random (genWord, withStdGen)
 
 -- random
 import System.Random (RandomGen)
 
-hangman :: IO ()
-hangman = do
-  putStrLn "Hangman"
-  withStdGen Nothing run'
+hangman :: Game
+hangman = Game
+  { gameName = "Hangman"
+  , gameRun = withStdGen Nothing run'
+  }
 
 run' :: RandomGen g => g -> IO ()
 run' g = do

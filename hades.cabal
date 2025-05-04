@@ -22,7 +22,6 @@ library
     Hades.Game.Bagels
     Hades.Game.Hangman
     Hades.Game.Word
-    Hades.Main
     Hades.Lib.Random
   build-depends:
     , bytestring

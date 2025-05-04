@@ -1,6 +1,9 @@
 module Hades.Game (Game(..)) where
 
-data Game
-  = Bagels
-  | Hangman
-  | Word
+-- base
+import System.Console.GetOpt (OptDescr)
+
+data Game = Game
+  { gameName :: String
+  , gameRun :: IO ()
+  }

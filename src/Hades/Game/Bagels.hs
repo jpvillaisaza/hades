@@ -5,15 +5,17 @@ import Data.Char (isDigit, toUpper)
 import Data.List (nub, sort)
 
 -- hades
+import Hades.Game (Game (..))
 import Hades.Lib.Random (genDigits, withStdGen)
 
 -- random
 import System.Random (RandomGen)
 
-bagels :: IO ()
-bagels = do
-  putStrLn "Bagels"
-  withStdGen Nothing play
+bagels :: Game
+bagels = Game
+  { gameName = "Bagels"
+  , gameRun = withStdGen Nothing play
+  }
 
 play :: RandomGen g => g -> IO ()
 play g = do

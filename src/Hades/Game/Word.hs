@@ -1,15 +1,17 @@
 module Hades.Game.Word (word) where
 
 -- hades
+import Hades.Game (Game (..))
 import Hades.Lib.Random (genWordOf, withStdGen)
 
 -- random
 import System.Random (RandomGen)
 
-word :: IO ()
-word = do
-  putStrLn "word"
-  withStdGen Nothing run
+word :: Game
+word = Game
+  { gameName = "Word"
+  , gameRun = withStdGen Nothing run
+  }
 
 run :: RandomGen g => g -> IO ()
 run g = do
