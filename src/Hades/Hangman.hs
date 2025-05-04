@@ -1,11 +1,22 @@
 module Hades.Hangman (hangman) where
 
+-- base
 import Control.Monad (unless)
+
+-- hades
+import Hades.Random (genWord, withStdGen)
+
+-- random
+import System.Random (RandomGen)
 
 hangman :: IO ()
 hangman = do
   putStrLn "Hangman"
-  let word = "hangman"
+  withStdGen Nothing run'
+
+run' :: RandomGen g => g -> IO ()
+run' g = do
+  (word, _) <- genWord g
   play 1 word (fmap (, False) word) mempty
 
 play :: Int -> String -> [(Char, Bool)] -> [Char] -> IO ()
@@ -34,3 +45,10 @@ play n word guessed previous = do
 update :: Char -> [(Char, Bool)] -> [(Char, Bool)]
 update guess guessed =
   [(letter, isGuessed || guess == letter) | (letter, isGuessed) <- guessed]
+
+----------------------------------------------------------------------
+-- * Bibliography
+----------------------------------------------------------------------
+
+-- $bib
+-- * TODO
