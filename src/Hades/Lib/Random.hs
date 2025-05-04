@@ -1,5 +1,6 @@
-module Hades.Random
-  ( genElement
+module Hades.Lib.Random
+  ( genDigits
+  , genElement
   , genLine
   , genLineOf
   , genWord
@@ -9,6 +10,8 @@ module Hades.Random
 
 --base
 import Control.Monad.IO.Class (MonadIO)
+import Data.Function (on)
+import Data.List (groupBy)
 
 -- bytestring
 import qualified Data.ByteString as BS
@@ -16,6 +19,20 @@ import qualified Data.ByteString.Char8 as BS8
 
 -- random
 import System.Random
+
+genDigit :: RandomGen g => g -> (Char, g)
+genDigit =
+  genElement ['0'..'9']
+
+genDigits :: RandomGen g => g -> (String, g)
+genDigits =
+  process . take 3 . fmap last . groupBy ((==) `on` fst) . genMany genDigit
+  where
+    process xs = (fmap fst xs, last (fmap snd xs))
+
+genMany :: (g -> (a, g)) -> g -> [(a, g)]
+genMany gen g0 =
+  let (x, g1) = gen g0 in (x, g0) : genMany gen g1
 
 genElement :: RandomGen g => [a] -> g -> (a, g)
 genElement xs g0 =

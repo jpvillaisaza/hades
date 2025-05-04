@@ -1,10 +1,10 @@
-module Hades.Hangman (hangman) where
+module Hades.Game.Hangman (hangman) where
 
 -- base
 import Control.Monad (unless)
 
 -- hades
-import Hades.Random (genWord, withStdGen)
+import Hades.Lib.Random (genWord, withStdGen)
 
 -- random
 import System.Random (RandomGen)
@@ -51,4 +51,6 @@ update guess guessed =
 ----------------------------------------------------------------------
 
 -- $bib
--- * TODO
+-- * Ahl, David H. (1978). /BASIC Computer Games/. Workman Publishing.
+-- * Hutton, Graham (2016). /Programming in Haskell/. 2nd ed.
+--   Cambridge University Press.

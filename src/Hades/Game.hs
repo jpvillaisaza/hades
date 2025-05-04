@@ -1,4 +1,6 @@
-module Hades.Game where
+module Hades.Game (Game(..)) where
 
 data Game
-  = Hangman
+  = Bagels
+  | Hangman
+  | Word
