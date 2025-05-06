@@ -1,9 +1,13 @@
 module Hades.Main (main) where
 
+-- base
+import Data.Version (showVersion)
+
 -- hades
 import Hades.Game.Bagels (bagelsCommand)
 import Hades.Game.Hangman (hangmanCommand)
 import Hades.Game.Word (wordCommand)
+import Paths_hades (version)
 
 -- optparse-applicative
 import Options.Applicative
@@ -15,7 +19,7 @@ main = do
 
 description :: ParserInfo (IO ())
 description =
-  info (games <**> helper <**> simpleVersioner "TODO")
+  info (games <**> helper <**> simpleVersioner (showVersion version))
     (fullDesc
     <> progDesc "prog desc"
     <> header "hades header"

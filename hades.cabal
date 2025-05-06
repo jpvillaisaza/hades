@@ -23,6 +23,10 @@ library
     Hades.Game.Word
     Hades.Lib.Random
     Hades.Main
+  other-modules:
+    Paths_hades
+  autogen-modules:
+    Paths_hades
   build-depends:
     , bytestring
     , optparse-applicative >= 0.18.1 && < 0.19
