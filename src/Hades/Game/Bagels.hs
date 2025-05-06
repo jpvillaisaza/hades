@@ -1,21 +1,41 @@
-module Hades.Game.Bagels (bagels) where
+module Hades.Game.Bagels (bagelsCommand) where
 
 -- base
 import Data.Char (isDigit, toUpper)
 import Data.List (nub, sort)
 
 -- hades
-import Hades.Game (Game (..))
 import Hades.Lib.Random (genDigits, withStdGen)
+
+-- optparse-applicative
+import Options.Applicative
 
 -- random
 import System.Random (RandomGen)
 
-bagels :: Game
-bagels = Game
-  { gameName = "Bagels"
-  , gameRun = withStdGen Nothing play
+data Opt = Opt
+  { optSeed :: Maybe Int
   }
+
+optParser :: Parser Opt
+optParser =
+  Opt <$> optional seedParser
+  where
+    seedParser =
+      option auto
+        (long "seed"
+        <> metavar "SEED"
+        <> help "the seed"
+        )
+
+run :: Opt -> IO ()
+run opt = do
+  withStdGen (optSeed opt) play
+
+bagelsCommand :: Mod CommandFields (IO ())
+bagelsCommand = command "bagels"
+  (info (run <$> optParser)
+        (progDesc "Play bagels"))
 
 play :: RandomGen g => g -> IO ()
 play g = do

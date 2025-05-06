@@ -1,20 +1,40 @@
-module Hades.Game.Hangman (hangman) where
+module Hades.Game.Hangman (hangmanCommand) where
 
 -- base
 import Control.Monad (unless)
 
 -- hades
-import Hades.Game (Game (..))
 import Hades.Lib.Random (genWord, withStdGen)
+
+-- optparse-applicative
+import Options.Applicative
 
 -- random
 import System.Random (RandomGen)
 
-hangman :: Game
-hangman = Game
-  { gameName = "Hangman"
-  , gameRun = withStdGen Nothing run'
+data Opt = Opt
+  { optSeed :: Maybe Int
   }
+
+optParser :: Parser Opt
+optParser =
+  Opt <$> optional seedParser
+  where
+    seedParser =
+      option auto
+        (long "seed"
+        <> metavar "SEED"
+        <> help "the seed"
+        )
+
+run :: Opt -> IO ()
+run opt = do
+  withStdGen (optSeed opt) run'
+
+hangmanCommand :: Mod CommandFields (IO ())
+hangmanCommand = command "hangman"
+  (info (run <$> optParser)
+        (progDesc "Play Hangman"))
 
 run' :: RandomGen g => g -> IO ()
 run' g = do
