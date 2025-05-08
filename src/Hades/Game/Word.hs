@@ -1,18 +1,37 @@
-module Hades.Game.Word (word) where
+module Hades.Game.Word (game) where
 
 -- hades
+import Hades.Game (Game(..), mSeedParser)
 import Hades.Lib.Random (genWordOf, withStdGen)
+
+-- optparse-applicative
+import Options.Applicative (Parser)
 
 -- random
 import System.Random (RandomGen)
 
-word :: IO ()
-word = do
-  putStrLn "word"
-  withStdGen Nothing run
+game :: Game Opt
+game = Game
+  { gameName = "Word"
+  , gameDescription = "Word"
+  , gameParser = optParser
+  , gameRunner = run
+  }
 
-run :: RandomGen g => g -> IO ()
-run g = do
+data Opt = Opt
+  { optSeed :: Maybe Int
+  }
+
+optParser :: Parser Opt
+optParser =
+  Opt <$> mSeedParser
+
+run :: Opt -> IO ()
+run opt =
+  withStdGen (optSeed opt) run'
+
+run' :: RandomGen g => g -> IO ()
+run' g = do
   (word, _) <- genWordOf (\s -> length s == 5) g
   play 1 word (fmap (, False) word)
 
