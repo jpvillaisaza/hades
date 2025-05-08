@@ -18,6 +18,7 @@ library
     src
   exposed-modules:
     Hades
+    Hades.Game
     Hades.Game.Bagels
     Hades.Game.Hangman
     Hades.Game.Word

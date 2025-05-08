@@ -1,36 +1,33 @@
 module Hades.Main (main) where
 
 -- base
+import Control.Monad (join)
 import Data.Version (showVersion)
 
 -- hades
-import Hades.Game.Bagels (bagelsCommand)
-import Hades.Game.Hangman (hangmanCommand)
-import Hades.Game.Word (wordCommand)
+import Hades.Game (mkGameCommand)
+import qualified Hades.Game.Bagels as Bagels (game)
+import qualified Hades.Game.Hangman as Hangman (game)
+import qualified Hades.Game.Word as Word (game)
 import Paths_hades (version)
 
 -- optparse-applicative
 import Options.Applicative
 
 main :: IO ()
-main = do
-  runCmd <- customExecParser (prefs showHelpOnEmpty) description
-  runCmd
+main =
+  join (customExecParser (prefs showHelpOnEmpty) parserInfo)
+  where
+    parserInfo =
+      info
+        (gameCommands <**> helper <**> simpleVersioner (showVersion version))
+        (fullDesc <> header "Hades")
 
-description :: ParserInfo (IO ())
-description =
-  info (games <**> helper <**> simpleVersioner (showVersion version))
-    (fullDesc
-    <> progDesc "prog desc"
-    <> header "hades header"
-    )
-
-games :: Parser (IO ())
-games =
-  hsubparser
-    (commandGroup "Available games:"
-    <> bagelsCommand
-    <> hangmanCommand
-    <> wordCommand
-    <> metavar "GAME"
-    )
+gameCommands :: Parser (IO ())
+gameCommands =
+  hsubparser $
+    commandGroup "Available games:"
+      <> mkGameCommand Bagels.game
+      <> mkGameCommand Hangman.game
+      <> mkGameCommand Word.game
+      <> metavar "GAME"
