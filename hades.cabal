@@ -54,12 +54,17 @@ test-suite spec
   hs-source-dirs:
     test
   main-is:
-    Main.hs
+    Spec.hs
   other-modules:
     Hades.Game.BagelsSpec
     Hades.Game.HangmanSpec
     Hades.Game.WordSpec
     Hades.Lib.RandomSpec
+  build-depends:
+    , hades
+    , hspec
+  build-tool-depends:
+    hspec-discover:hspec-discover
 
 source-repository head
   type: git

@@ -2,6 +2,7 @@ module Hades.Game
   ( Game(..)
   , mkGameCommand
   , mSeedParser
+  , mWordParser
   ) where
 
 -- base
@@ -35,3 +36,13 @@ seedParser =
 mSeedParser :: Parser (Maybe Int)
 mSeedParser =
   optional seedParser
+
+wordParser :: Parser String
+wordParser =
+  strOption $
+    long "word"
+      <> metavar "WORD"
+
+mWordParser :: Parser (Maybe String)
+mWordParser =
+  optional wordParser
