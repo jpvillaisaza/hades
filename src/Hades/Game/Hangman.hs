@@ -4,14 +4,11 @@ module Hades.Game.Hangman (game) where
 import Control.Monad (unless)
 
 -- hades
-import Hades.Game (Game(..), mSeedParser)
+import Hades.Game (Game(..), mSeedParser, mWordParser)
 import Hades.Lib.Random (genWord, withStdGen)
 
 -- optparse-applicative
 import Options.Applicative (Parser)
-
--- random
-import System.Random (RandomGen)
 
 game :: Game Opt
 game = Game
@@ -23,19 +20,23 @@ game = Game
 
 data Opt = Opt
   { optSeed :: Maybe Int
+  , optWord :: Maybe String
   }
 
 optParser :: Parser Opt
 optParser =
-  Opt <$> mSeedParser
+  Opt <$> mSeedParser <*> mWordParser
 
 run :: Opt -> IO ()
 run opt = do
-  withStdGen (optSeed opt) run'
-
-run' :: RandomGen g => g -> IO ()
-run' g = do
-  (word, _) <- genWord g
+  word <-
+    case optWord opt of
+      Just word ->
+        pure word
+      Nothing ->
+        withStdGen (optSeed opt) $ \g -> do
+          (word, _) <- genWord g
+          pure word
   play 1 word (fmap (, False) word) mempty
 
 play :: Int -> String -> [(Char, Bool)] -> [Char] -> IO ()
