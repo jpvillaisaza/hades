@@ -3,6 +3,9 @@ cabal-version: 3.12
 name: hades
 version: 0.0.0.0
 
+license: MIT
+license-file: LICENSE
+
 common common
   build-depends:
     , base >= 4.21.0 && < 4.22
