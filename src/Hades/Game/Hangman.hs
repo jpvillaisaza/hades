@@ -1,4 +1,4 @@
-module Hades.Game.Hangman (game) where
+module Hades.Game.Hangman (game, update) where
 
 -- base
 import Control.Monad (unless)
@@ -62,9 +62,16 @@ play n word guessed previous = do
         else
           play (succ n) word guessed previous
 
+-- |
+--
+-- >>> update 'a' [('a', False)]
+-- [('a', True)]
+-- >>> update 'b' [('a', False)]
+-- [('a', False)]
+
 update :: Char -> [(Char, Bool)] -> [(Char, Bool)]
-update guess guessed =
-  [(letter, isGuessed || guess == letter) | (letter, isGuessed) <- guessed]
+update guess =
+  fmap (\(letter, guessed) -> (letter, guessed || guess == letter))
 
 ----------------------------------------------------------------------
 -- * Bibliography

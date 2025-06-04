@@ -61,6 +61,7 @@ test-suite spec
     Hades.Game.WordSpec
     Hades.Lib.RandomSpec
   build-depends:
+    , QuickCheck
     , hades
     , hspec
   build-tool-depends:
