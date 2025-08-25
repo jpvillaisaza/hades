@@ -14,8 +14,8 @@ game :: Game Opt
 game = Game
   { gameName = "Hangman"
   , gameDescription = "Hangman"
-  , gameParser = optParser
-  , gameRunner = run
+  , gameOptParser = optParser
+  , gameRunner = runner
   }
 
 data Opt = Opt
@@ -27,8 +27,8 @@ optParser :: Parser Opt
 optParser =
   Opt <$> mSeedParser <*> mWordParser
 
-run :: Opt -> IO ()
-run opt = do
+runner :: Opt -> IO ()
+runner opt = do
   word <-
     case optWord opt of
       Just word ->
@@ -46,11 +46,13 @@ play n word guessed previous = do
   putStr ("Guess " <> show n <> "? ")
   guess <- getLine
   case guess of
+    "?" ->
+      putStrLn ("it was: " <> word)
     [] ->
       play n word guessed previous
     [guess1] -> do
       let new = update guess1 guessed
-      if and (fmap snd new)
+      if all snd new
         then
           putStrLn "You got it!"
         else

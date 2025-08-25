@@ -6,7 +6,7 @@ module Hades.Lib.Random
   , genWord
   , genWordOf
   , withStdGen
-  )where
+  ) where
 
 --base
 import Control.Monad.IO.Class (MonadIO)
