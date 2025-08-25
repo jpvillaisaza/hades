@@ -1,38 +1,39 @@
 module Hades.Game.Word (game) where
 
 -- hades
-import Hades.Game (Game(..), mSeedParser)
+import Hades.Game (Game(..), mSeedParser, mWordParser)
 import Hades.Lib.Random (genWordOf, withStdGen)
 
 -- optparse-applicative
 import Options.Applicative (Parser)
 
--- random
-import System.Random (RandomGen)
-
 game :: Game Opt
 game = Game
   { gameName = "Word"
   , gameDescription = "Word"
-  , gameParser = optParser
-  , gameRunner = run
+  , gameOptParser = optParser
+  , gameRunner = runner
   }
 
 data Opt = Opt
   { optSeed :: Maybe Int
+  , optWord :: Maybe String
   }
 
 optParser :: Parser Opt
 optParser =
-  Opt <$> mSeedParser
+  Opt <$> mSeedParser <*> mWordParser
 
-run :: Opt -> IO ()
-run opt =
-  withStdGen (optSeed opt) run'
-
-run' :: RandomGen g => g -> IO ()
-run' g = do
-  (word, _) <- genWordOf (\s -> length s == 5) g
+runner :: Opt -> IO ()
+runner opt = do
+  word <-
+    case optWord opt of
+      Just word ->
+        pure word
+      Nothing ->
+        withStdGen (optSeed opt) $ \g -> do
+          (word, _) <- genWordOf (\s -> length s == 5) g
+          pure word
   play 1 word (fmap (, False) word)
 
 play :: Int -> String -> [(Char, Bool)] -> IO ()
@@ -47,12 +48,23 @@ play attempt word exacts = do
       play attempt word exacts
     _ -> do
       let ms = [x | x <- word, x `elem` guess]
-      let exact = zipWith (\x (l, g) -> (l, x == l || g)) guess exacts
+      let exact = update guess exacts
       putStrLn ms
       putStrLn (fmap (\(l, g) -> if g then l else '-') exact)
       if word == guess
         then putStrLn ("It took " <> show attempt <> " guesses!")
         else play (succ attempt) word exact
+
+-- |
+--
+-- >>> update "ab" [('a', False), ('b', False)]
+-- [('a', True), ('b', True)]
+-- >>> update "ba" [('a', False), ('b', False)]
+-- [('a', False), ('b', False)]
+
+update :: String -> [(Char, Bool)] -> [(Char, Bool)]
+update guess =
+  zipWith (\x (l, g) -> (l, x == l || g)) guess
 
 ----------------------------------------------------------------------
 -- * Bibliography

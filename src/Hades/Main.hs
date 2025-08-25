@@ -3,6 +3,7 @@ module Hades.Main (main) where
 -- base
 import Control.Monad (join)
 import Data.Version (showVersion)
+import System.IO (BufferMode(..), hSetBuffering, stdin, stdout)
 
 -- hades
 import Hades.Game (mkGameCommand)
@@ -15,7 +16,9 @@ import Paths_hades (version)
 import Options.Applicative
 
 main :: IO ()
-main =
+main = do
+  hSetBuffering stdin LineBuffering
+  hSetBuffering stdout NoBuffering
   join (customExecParser (prefs showHelpOnEmpty) parserInfo)
   where
     parserInfo =

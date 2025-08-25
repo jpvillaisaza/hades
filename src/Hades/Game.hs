@@ -14,17 +14,17 @@ import Options.Applicative
 data Game opt = Game
   { gameName :: String
   , gameDescription :: String
-  , gameParser :: Parser opt
+  , gameOptParser :: Parser opt
   , gameRunner :: opt -> IO ()
   }
 
-mkGameCommand :: Game a -> Mod CommandFields (IO ())
+mkGameCommand :: Game opt -> Mod CommandFields (IO ())
 mkGameCommand game =
   command (fmap toLower (gameName game)) parserInfo
   where
     parserInfo =
       info
-        (gameRunner game <$> gameParser game)
+        (gameRunner game <$> gameOptParser game)
         (progDesc (gameDescription game))
 
 seedParser :: Parser Int

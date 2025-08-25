@@ -18,8 +18,8 @@ game :: Game Opt
 game = Game
   { gameName = "Bagels"
   , gameDescription = "Bagels"
-  , gameParser = optParser
-  , gameRunner = run
+  , gameOptParser = optParser
+  , gameRunner = runner
   }
 
 data Opt = Opt
@@ -30,8 +30,8 @@ optParser :: Parser Opt
 optParser =
   Opt <$> mSeedParser
 
-run :: Opt -> IO ()
-run opt = do
+runner :: Opt -> IO ()
+runner opt = do
   withStdGen (optSeed opt) play
 
 play :: RandomGen g => g -> IO ()
